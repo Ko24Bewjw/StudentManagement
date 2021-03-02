@@ -1,0 +1,661 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load staticfiles %}
+<div class="panel panel-primary" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+    <div class="panel-heading">
+        <h3 class="panel-title">学生信息查询</h3>
+    </div>
+    <div class="panel-body">
+
+                <form id="formSearch" class="form-horizontal" role="form" id="serach_form">
+
+                        <label class="control-label col-sm-1" for="txt_search_stuidlabel">学号</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control"  name="txt_search_stuid" id="search_stuid">
+                        </div>
+
+                       <div class="col-sm-2" style="text-align:left;">
+                            <button id="btn_add" type="button" class="btn btn-primary"  data-toggle="modal" >
+                              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>调整
+                            </button>
+                       </div>
+
+                </form>
+
+         </div>
+    </div>
+
+
+    <div id="toolbar" class="btn-group">
+        <button id="btn_query" type="button" class="btn btn-primary">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>查询
+            </button>
+    </div>
+
+
+
+
+    <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">详细信息</h3>
+            </div>
+        <div class="panel-body">
+
+
+            <table id="tb_departments"></table>
+
+        </div>
+      </div>
+
+
+
+      <!-- 模态框（Modal）增加学生信息 -->
+
+     <div class="modal fade" id="stuaddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel"></h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="col-md-12" style="width: 100%">
+                            <h1 class="page-header"  style="font-size: 14px ; text-align: center" >
+                             <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">学生信息</h3>
+                                </div>
+
+                                        <div class="panel-body">
+                                                            <form class="form-horizontal group-border hover-stripped" id="stuadd_form" role="form" action={% url 'StuAdd'%}  method="POST">
+                                                              {% csrf_token %}
+
+
+                                                                <div class="form-group">
+                                                                    <label class="col-lg-3 col-md-3 col-sm-12 control-label">学号:</label>
+                                                                    <div class="col-lg-6 col-md-5">
+                                                                          <input type="text" class="form-control"  id="Stu_ID" placeholder="请输入学号" required name="Stu_ID" autofocus="autofocus"  maxlength="8" onkeyup="this.value=this.value.replace(/\D/g,'')" >
+                                                                    </div>
+                                                                </div>
+
+
+                                                                <div class="form-group">
+                                                                    <label class="col-lg-3 col-md-3col-sm-12 control-label">姓名:</label>
+                                                                    <div class="col-lg-6 col-md-6">
+                                                                        <input type="text" class="form-control"  id="Stu_Name" placeholder="请输入姓名" required name="Stu_Name">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-lg-3 col-md-3 col-sm-12 control-label " id="passwordlabel" >密码:</label>
+                                                                    <div class="col-lg-6 col-md-6">
+                                                                        <input type="password" class="form-control"  id="Stu_Password"  value="123456" name="Stu_Password">
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- End .form-group  -->
+
+                                                                   <div class="form-group">
+                                                                     <label class="col-lg-3 col-md-3 col-sm-12 control-label">性别:</label>
+                                                                           <div class="col-lg-6 col-md-6">
+                                                                                <select class="form-control" id="Stu_Sex"   name="Stu_Sex">
+                                                                                        <option value="男">男</option>
+                                                                                        <option value="女">女</option>
+                                                                                </select>
+
+                                                                            </div>
+                                                                   </div>
+
+                                                                <div class="form-group">
+                                                                    <label class="col-lg-3 col-md-3 col-sm-12 control-label">出生年月:</label>
+
+                                                                            <div class="col-lg-6 col-md-6">
+                                                                                  <input type="date" class="form-control"  id="Stu_BirthDate" name="Stu_BirthDate" >
+
+                                                                            </div>
+
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                     <label class="col-lg-3 col-md-3 col-sm-12 control-label">原班级:</label>
+                                                                           <div class="col-lg-6 col-md-6">
+                                                                                <select class="form-control" required name="Stu_Class_1" id="id_Stu_Class_1">
+
+                                                                                    {% for class in ClassList%}
+                                                                                        <option value={{ class.Class_ID}}>{{ class.Class_ID}}</option>
+
+
+                                                                                    {% endfor %}
+                                                                                </select>
+
+                                                                            </div>
+                                                                   </div>
+
+                                                                 <div class="form-group">
+                                                                     <label class="col-lg-3 col-md-3 col-sm-12 control-label">现班级:</label>
+                                                                           <div class="col-lg-6 col-md-6">
+                                                                                <select class="form-control" id="Stu_Class_2"  name="Stu_Class_2">
+
+                                                                                    {% for class in ClassList%}
+                                                                                        <option value={{ class.Class_ID }}>{{ class.Class_ID}}</option>
+
+
+                                                                                    {% endfor %}
+                                                                                </select>
+
+                                                                            </div>
+                                                                   </div>
+
+
+                                                              <div class="form-group">
+                                                                    <label class="col-lg-3 col-md-2 col-sm-12 control-label">家庭地址:</label>
+                                                                    <div class="col-lg-8 col-md-10">
+                                                                        <input type="text" class="form-control" placeholder="最长50字符" id="Stu_Address"   name="Stu_Address">
+                                                                    </div>
+                                                                </div>
+                                                             <div class="form-group">
+                                                                    <label class="col-lg-3 col-md-3 col-sm-12 control-label">电话:</label>
+                                                                    <div class="col-lg-6 col-md-6">
+                                                                        <input type="text" class="form-control" id="Stu_Telephone" placeholder="请输入11位手机号码" name="Stu_Telephone" maxlength="11" onkeyup="this.value=this.value.replace(/\D/g,'')" >
+                                                                    </div>
+                                                                </div>
+
+                                                             <div class="form-group">
+                                                                    <label class="col-lg-3 col-md-3 col-sm-12 control-label">宿舍:</label>
+                                                                    <div class="col-lg-6 col-md-6">
+                                                                        <input type="text" class="form-control" id="Stu_Hostel" placeholder="楼号+宿舍号"  name="Stu_Hostel">
+                                                                    </div>
+                                                                </div>
+
+
+
+                                                            </form>
+                                        </div>
+
+
+
+                                 </div>
+
+
+                            </h1>
+
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" id="btn_save"  href="#"  class="btn btn-primary">提  交</button>
+                        <button type="button" class="btn btn-default"  data-dismiss="modal">关闭</button>
+
+                    </div>
+                </div>
+            </div>
+     </div>
+      <!--upfile Modal 上传文件 -->
+ <!-- Modal -->
+            <div class="modal fade" id="upfileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">文件上传</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                      <form  role="form"   method="POST" class="form-horizontal group-border hover-stripped">
+                           {% csrf_token %}
+                           <a href="{%  url 'down_template' %}" class="form-control" style="border:none;">下载导入模板</a>
+                            <div class="file-loading">
+                              <input id="input-file" name="input-file" multiple type="file">
+                            </div>
+                            <div id="kartik-file-errors"></div>
+
+                      </form>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="dataimport" title="Your custom upload logic"  onclick="ImportData()">导入</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+    <!--upfile Modal 上传文件结束 -->
+
+
+     </div>
+    </div>
+
+
+<script >
+
+
+$(function () {
+
+    //1.初始化Table
+    var oTable = new TableInit();
+    oTable.Init();
+
+
+
+});
+
+
+var TableInit = function () {
+    var oTableInit = new Object();
+    //初始化Table
+    oTableInit.Init = function () {
+        $('#tb_departments').bootstrapTable({
+            url: '{% url 'getstudata' %}',         //请求后台的URL（*）
+            method: 'get',                      //请求方式（*）
+            toolbar: '#toolbar',                //工具按钮用哪个容器
+            striped: true,                      //是否显示行间隔色
+            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: true,                   //是否显示分页（*）
+            sortable: true,                     //是否启用排序
+            sortName: 'Stu_ID', // 要排序的字段
+            sortOrder: "asc",                   //排序方式
+            queryParams: oTableInit.queryParams,//传递参数（*）
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber:1,                       //初始化加载第一页，默认第一页
+            pageSize: 10,                       //每页的记录行数（*）
+            pageList: [10, 20, 30, 50,100],        //可供选择的每页的行数（*）
+            clickToSelect:true,
+            search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+            strictSearch: true,
+            showColumns: true,                  //是否显示所有的列
+            showRefresh: true,                  //是否显示刷新按钮
+            minimumCountColumns: 2,             //最少允许的列数
+            clickToSelect: true,                //是否启用点击选中行
+            height: 700,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            uniqueId: "Stu_ID",                     //每一行的唯一标识，一般为主键列
+            showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
+            cardView: false,                    //是否显示详细视图
+            detailView: false,                   //是否显示父子表
+            sidePagination: "server",
+            showExport: true,
+            exportDataType: 'all',
+            exportTypes:[ 'csv', 'doc', 'excel', 'xlsx', 'pdf'],  //导出文件类型
+
+
+            columns: [{
+                checkbox: true
+            }, {
+                field: 'Stu_Hostel',
+                title: '宿舍编号',
+                sortable:true
+            },
+            ]
+        });
+    };
+
+    //得到查询的参数
+    oTableInit.queryParams = function (params) {
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            order: params.order,
+            sort:  params.sort,      //排序列名
+            order: params.order ,//排位命令（desc，asc）
+            search:params.search,
+            //departmentname: $("#txt_search_departmentname").val(),
+            //statu: $("#txt_search_statu").val(),
+            search_class: $("#search_class").val(),// 额外添加的参数
+            search_name: $("#search_name").val(), // 额外添加的参数
+            search_stuid: $("#search_stuid").val(), // 额外添加的参数
+
+
+
+        };
+        return temp;
+    };
+    return oTableInit;
+};
+
+
+
+//bootsrap-table 中的自定义按钮
+
+ function actionFormatter(value, row, index) {
+        return [
+                /*
+            '<a class="update" href="javascript:" title="Update Item"><i class="glyphicon glyphicon-edit"></i></a>',
+            '<a class="remove" href="javascript:" title="Delete Item"><i class="glyphicon glyphicon-remove-circle"></i></a>',*/
+            '<a class="btn btn-success" id="btndetail" href="#" onclick="modal_show('+row.Stu_ID+')">详细</a>',
+            '<a class="btn btn-info" id="btnedit" href="#" onclick="modal_edit('+row.Stu_ID+')">编辑</a>',
+            '<a class="btn btn-danger" id="btndel" href="#" onclick="modal_del('+row.Stu_ID+')">删除</a>' ,
+
+        ].join('');
+    }
+
+
+//导入学生按钮
+$("#btn_import").click(function () {
+     $('#upfileModal').modal();
+     $("#input-file").fileinput({
+        language: 'zh', //设置语言
+        uploadUrl: {% url 'upstufile' %}, //上传的地址
+        allowedFileExtensions: ['xls', 'xlsx', 'csv'],//接收的文件后缀
+        showPreview: false,
+        showUpload: true,
+         maxFileCount:5,
+        msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
+
+        //uploadUrl: '/site/file-upload-single'
+    });
+    //导入文件上传完成之后的事件
+    var fileName = [];
+            $("#input-file").on("fileuploaded", function (event, data, previewId, index) {
+                if(data.response.success )
+                {
+
+
+                }
+                else
+                {
+                   alert("上传失败!");
+                }
+            });
+})
+
+
+
+//导入数据按钮
+function ImportData() {
+
+  $.getJSON("{%  url 'import_excel' %}" ,function(ret)
+        {
+
+               if(ret.status=="success") {
+
+                   DialogShow("数据添加成功!!!",BootstrapDialog.TYPE_SUCCESS);
+                }
+               else
+                   DialogShow("数据添加有"+ret.errorcount+"条失败",BootstrapDialog.TYPE_WARNING);
+
+         }
+
+
+
+
+)}
+
+
+$("#btn_query").click(function () {
+
+       $('#tb_departments').bootstrapTable('refresh');
+
+
+     })
+
+
+var stuaction=1;  //用于判别是编辑还是增加,2者用一个窗口
+var stuid="";
+
+//增加学生按钮
+
+$("#btn_add").click(function () {
+
+
+      $('#stuaddModal').modal();
+      $('#btn_save').enable(true);
+      $('#Stu_Password').show();
+      $('#passwordlabel').show();
+      $('#Stu_ID').val('');
+      $('#Stu_Name').val('');
+      $('#Stu_Password').val('');
+      $('#Stu_Sex').val('');
+      $('#Stu_BirthDate').val('');
+      $('#Stu_Class_1').val('');
+      $('#Stu_Class_2').val('');
+      $('#Stu_Address').val('');
+      $('#Stu_Telephone').val('');
+      $('#Stu_Hostel').val('');
+      stuaction=1;
+
+     })
+
+
+
+//添加学生的保存按钮
+$("#btn_save").click(function () {
+
+    if(stuaction==1)
+       addstu(); //增加学生信息
+    if(stuaction==2)
+        {
+          $.getJSON("{% url 'Stu_Del' %}",{"stu_id":stuid},function(ret) {
+
+          if (ret.data == 'success') {
+
+             addstu();
+
+           }
+         })
+
+
+   }
+
+ $('#tb_departments').bootstrapTable('refresh');
+
+
+     })
+
+//添加学生信息
+// stuaction用于学生操作,如果是增加则1,如果是编则为2
+function addstu()
+         {
+
+            $.ajax({
+            url: {% url 'StuAddajax' %},
+            type: "POST",
+
+            //data: {"Stu_ID": stu_id, "Stu_Name": stu_name,"Stu_Password":stu_password,"Stu_Sex":stu_sex,"Stu_BirthDate":stu_birthdate,
+            //        "Stu_Class_1" :stu_class1,"Stu_Class_2":stu_class2,"Stu_Address":stu_address,"Stu_Telephone":stu_telephone,"stu_hostel":Stu_Hostel},
+            data:$("#stuadd_form").serialize(),
+              success: function (ret) {
+                var obj = JSON.parse(ret);//字符串转对象
+                if(obj.data=="success") {
+
+                    if(stuaction==1)  //增加
+                         DialogShow("数据添加成功!!!",BootstrapDialog.TYPE_SUCCESS);
+
+                    if(stuaction==2)  //编辑
+                         DialogShow("数据编辑成功!!!",BootstrapDialog.TYPE_SUCCESS);
+
+
+                }
+                  if(obj.data=="notsuccess")
+                  {
+                   //  $("#stuaddModal").html('<div class="alert alert-danger">错误！请进行一些更改。</div>');
+                   //confirm_alert('数据添加失败','fa fa-comment');
+
+                     if(stuaction==1)  //增加
+                          DialogShow("数据添加失败!!!",BootstrapDialog.TYPE_WARNING);
+
+                     if(stuaction==2)  //编辑
+                         DialogShow("数据编辑失败!!!",BootstrapDialog.TYPE_WARNING);
+
+                  }
+
+
+
+            },
+        });
+      $('#Stu_ID').val('');
+      $('#Stu_Name').val('');
+      $('#Stu_Sex').val('');
+      $('#Stu_BirthDate').val('');
+      $('#Stu_Class_1').val('');
+      $('#Stu_Class_2').val('');
+      $('#Stu_Address').val('');
+      $('#Stu_Telephone').val('');
+      $('#Stu_Hostel').val('');
+
+
+
+ }
+
+
+
+
+
+//详细按钮
+function modal_show(Stu_ID){
+    stuid = Stu_ID;
+    $.getJSON("{% url 'Stu_Detail' %}",{"stu_id":stuid},function(ret){
+              //返回值 ret 在这里是一个字典
+
+
+           $('#stuaddModal').modal();
+           $('#Stu_ID').val(ret.Stu_ID);
+           $('#Stu_Name').val(ret.Stu_Name);
+           $('#Stu_Sex').val(ret.Stu_Sex);
+           $('#Stu_BirthDate').val(ret.Stu_BirthDate);
+           $('#Stu_Class_1').val(ret.Stu_Class1);
+           $('#Stu_Class_2').val(ret.Stu_Class2);
+           $('#Stu_Address').val(ret.Stu_Address);
+           $('#Stu_Telephone').val(ret.Stu_Telephone);
+           $('#Stu_Hostel').val(ret.Stu_Hostel);
+
+           $('#btn_save').enable(false);
+           $('#Stu_Password').hide();
+           $('#passwordlabel').hide();
+          });
+
+
+}
+
+
+//删除按钮JQUERY-confirm插件
+
+function modal_del(id) {
+    stuid=id;
+
+    BootstrapDialog.show({
+            title: '删除信息提示',
+            message: '确实删除数据吗?',
+            buttons: [{
+                label: '确定',
+                action: function(dialogItself) {
+                      dialogItself.close();
+
+                      $.getJSON("{% url 'Stu_Del' %}",{"stu_id":stuid},function(ret){
+
+                          if(ret.data=='success')
+                          {
+                             // confirm_alert('数据删除成功','fa fa-plus');
+                              //使用bootstrap dialog插件
+                               BootstrapDialog.show({
+                                    title: '信息提示',
+                                    message: '数据删除成功!',
+                                    buttons: [{
+
+                                        label: '关闭',
+                                        action: function(dialogItself) {
+
+
+                                           dialogItself.close();}
+
+                                      }]
+
+                                });
+
+                              $('#tb_departments').bootstrapTable('refresh');
+
+
+                          }
+
+
+                         })
+
+
+                }
+            }, {
+                label: '取消',
+                action: function(dialogItself) {
+                   dialogItself.close();
+                }
+            }]
+        });
+
+
+}
+
+
+function modal_edit(Stu_ID) {
+
+
+    stuid= Stu_ID;
+    stuaction=2;
+    $('#stuaddModal').modal();
+    $('#btn_save').enable(true);
+    $('#Stu_Password').show();
+    $('#passwordlabel').show();
+
+    $.getJSON("{% url 'Stu_Detail' %}",{"stu_id":stuid },function(ret) {
+        //返回值 ret 在这里是一个字典
+        $('#stuaddModal').modal();
+        $('#Stu_ID').val(ret.Stu_ID);
+        $('#Stu_Name').val(ret.Stu_Name);
+        $('#Stu_Sex').val(ret.Stu_Sex);
+        $('#Stu_Class_1').val(ret.Stu_Class1);
+        $('#Stu_Class_2').val(ret.Stu_Class2);
+        $('#Stu_Address').val(ret.Stu_Address);
+        $('#Stu_Telephone').val(ret.Stu_Telephone);
+        $('#Stu_Hostel').val(ret.Stu_Hostel);
+        $('#Stu_Password').val(ret.Stu_Password);
+    });
+
+
+}
+
+
+//使用 datetimepicker 插件
+$('#datetimepicker').datetimepicker();
+
+
+
+function DialogShow(message1,type1) {
+
+    BootstrapDialog.show({
+        title: '信息提示!!!',
+        message: message1,
+        type: type1,
+        buttons: [{
+
+            label: '关闭',
+            action: function (dialogItself) {
+
+                $('#tb_departments').bootstrapTable('refresh');
+                dialogItself.close();
+
+
+            }
+
+        }],
+
+    });
+
+
+}
+
+</script>
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
+

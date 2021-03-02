@@ -1,0 +1,222 @@
+﻿
+{% extends 'base.html' %}
+
+{% block content %}
+{% load staticfiles %}
+<div class="col-md-12" style="width: 70%">
+    <h1 class="page-header"  style="font-size: 14px ; text-align: center" >
+     <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">修改学生信息</h3>
+        </div>
+
+                <div class="panel-body">
+
+                   <form class="form-horizontal group-border hover-stripped" role="form" id="StuEdit"   method="POST">
+                                      {% csrf_token %}
+
+
+                                        <div class="form-group">
+                                            <label class="col-lg-2 col-md-2 col-sm-12 control-label">学号:</label>
+                                            <div class="col-lg-6 col-md-5">
+                                                <input type="text" class="form-control" placeholder="学号不能为空" disabled autofocus="autofocus" name="Stu_ID" id="Stu_ID" maxlength="8" value={{ stuone.Stu_ID}}>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-lg-2 col-md-2 col-sm-12 control-label">姓名:</label>
+                                            <div class="col-lg-6 col-md-6">
+                                                <input type="text" class="form-control" placeholder="请输入姓名" required name="Stu_Name"  id="Stu_Name" value={{ stuone.Stu_Name}}>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-lg-2 col-md-2 col-sm-12 control-label">密码:</label>
+                                            <div class="col-lg-6 col-md-6">
+                                                <input type="password" class="form-control" value="123456" name="Stu_Password" id="Stu_Password" value={{ stuone.Stu_Password}}>
+                                            </div>
+                                        </div>
+
+                                       <div class="form-group">
+                                                <label class="col-lg-2 col-md-2 col-sm-12 control-label">密码校验:</label>
+                                                <div class="col-lg-6 col-md-6">
+                                                    <input type="password" class="form-control"  id="password2"   value={{ stuone.Stu_Password}} >
+                                                </div>
+                                         </div>
+
+
+                                        <!-- End .form-group  -->
+
+                                           <div class="form-group">
+                                             <label class="col-lg-2 col-md-2 col-sm-12 control-label">性别:</label>
+                                                   <div class="col-lg-6 col-md-6">
+                                                        <select class="form-control" name="Stu_Sex" value={{ stuone.Stu_Sex}} >
+                                                                <option value="男">男</option>
+                                                                <option value="女">女</option>
+                                                        </select>
+
+                                                    </div>
+                                           </div>
+
+                                        <div class="form-group">
+                                            <label class="col-lg-2 col-md-2 col-sm-12 control-label">出生年月:</label>
+
+                                                    <div class="col-lg-6 col-md-6">
+                                                        <div class="input-group">
+                                                              <input type="date" class="form-control"  id="Stu_BirthDate" name="Stu_BirthDate" value={{ stuone.Stu_BirthDate}}>
+                                                         </div>
+                                                    </div>
+
+                                        </div>
+
+                                        <div class="form-group">
+                                             <label class="col-lg-2 col-md-2 col-sm-12 control-label">原班级:</label>
+                                                   <div class="col-lg-6 col-md-6">
+
+                                                        <select class="form-control" id="Stu_Class_1" name="Stu_Class_1" >
+
+                                                            {% for class in ClassList%}
+                                                                {% ifequal  class.Class_ID stuone.Stu_Class_1.Class_ID %}
+                                                                   <option value={{ class.Class_ID}} selected >{{ class.Class_ID}}</option>
+                                                                {% else %}
+                                                                    <option value={{ class.Class_ID}}  >{{ class.Class_ID}}</option>
+                                                                {% endifequal %}
+
+                                                            {% endfor %}
+                                                        </select>
+                                                   </div>
+                                           </div>
+
+                                         <div class="form-group">
+                                             <label class="col-lg-2 col-md-2 col-sm-12 control-label">现班级:</label>
+                                                   <div class="col-lg-6 col-md-6">
+                                                        <select class="form-control"  name="Stu_Class_2" id="Stu_Class_2">
+
+                                                             {% for class in ClassList%}
+                                                                {% ifequal  class.Class_ID stuone.Stu_Class_2.Class_ID %}
+                                                                   <option value={{ class.Class_ID}} selected >{{ class.Class_ID}}</option>
+                                                                {% else %}
+                                                                    <option value={{ class.Class_ID}}  >{{ class.Class_ID}}</option>
+                                                                {% endifequal %}
+
+                                                            {% endfor %}
+
+                                                        </select>
+
+                                                    </div>
+                                           </div>
+
+
+                                      <div class="form-group">
+                                            <label class="col-lg-2 col-md-2 col-sm-12 control-label">家庭地址:</label>
+                                              <div class="col-lg-6 col-md-6">
+                                                <input type="text" class="form-control" placeholder="50字符长度" name="Stu_Address" id="Stu_Address">
+                                            </div>
+                                        </div>
+                                     <div class="form-group">
+                                            <label class="col-lg-2 col-md-2 col-sm-12 control-label">电话:</label>
+                                            <div class="col-lg-6 col-md-6">
+                                                <input type="text" class="form-control" placeholder="移动电话" name="Stu_Telephone" id="Stu_Telephone">
+                                            </div>
+                                        </div>
+
+                                     <div class="form-group">
+                                            <label class="col-lg-2 col-md-2 col-sm-12 control-label">宿舍:</label>
+                                            <div class="col-lg-6 col-md-6">
+                                                <input type="text" class="form-control" placeholder="楼号-宿舍号" name="Stu_Hostel"  id="Stu_Hostel" >
+                                            </div>
+                                        </div>
+
+                                        <button type="button" id="StuEditSubmit" class="btn btn-primary">提  交</button>
+                                        <button type="" id="StuEditSubmit" class="btn btn-primary">关闭</button>
+
+                                    </form>
+                </div>
+
+
+
+         </div>
+
+
+ </h1>
+</div>
+
+<script>
+
+$(document).ready(function(){
+
+$("#Stu_Class_2 option[text='信0701']").attr("selected", true);
+$("#Stu_Class_1").val({{ onestu.Class_ID }});
+
+});
+
+$("#StuEditSubmit").click(function () {
+
+       var password1=$('#Stu_Password').val();
+       var password2=$('#password2').val();
+       if(password1!=password2)
+          DialogShow("输入的密码不一致!!",BootstrapDialog.TYPE_WARNING);
+       else if ($('#Stu_Name').val()=="")
+           DialogShow("工号不能为空!!",BootstrapDialog.TYPE_WARNING);
+       else
+         {
+              $.ajax({
+                url:'{% url 'StuEditdata' %}',
+                type: "POST",
+
+                //data: {"Stu_ID": stu_id, "Stu_Name": stu_name,"Stu_Password":stu_password,"Stu_Sex":stu_sex,"Stu_BirthDate":stu_birthdate,
+                //        "Stu_Class_1" :stu_class1,"Stu_Class_2":stu_class2,"Stu_Address":stu_address,"Stu_Telephone":stu_telephone,"stu_hostel":Stu_Hostel},
+                data:$("#StuEdit").serialize(),
+                success: function (ret) {
+                    var obj = JSON.parse(ret);//字符串转对象
+                    if(obj.data=="success") {
+
+                             DialogShow("数据修改成功!!!",BootstrapDialog.TYPE_SUCCESS);
+
+                    }
+                      if(obj.data=="notsuccess")
+                      {
+
+                              DialogShow("数据修改失败!!!",BootstrapDialog.TYPE_WARNING);
+
+                      }
+
+
+                },
+            });
+         }
+
+
+     })
+
+
+
+
+
+
+function DialogShow(message1,type1) {
+
+    BootstrapDialog.show({
+        title: '信息提示!!!',
+        message: message1,
+        type: type1,
+        buttons: [{
+
+            label: '关闭',
+            action: function (dialogItself) {
+
+                $('#tb_departments').bootstrapTable('refresh');
+                dialogItself.close();
+
+
+            }
+
+        }],
+
+    });
+
+
+}
+
+</script>
+
+{% endblock %}
+
