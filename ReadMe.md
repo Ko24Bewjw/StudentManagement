@@ -1,12 +1,19 @@
-#此项目为Django初学练手之用，实现了最简单的登录、注册、以及通过邮箱找回密码的功能
-能够完成对学生信息的增删改查、以及信息的导入导出的功能
-本项目采用Python语言+Django+Ajax+Mysql实现
-本项目采用pycharm开发
-读者只需将其在pycharm打开，配置好python环境以及所需类库即可运行
-运行步骤将：
-1、StudentManagement的settings.py文件中的Database改成自己mysql的配置，并在MySQL中新建相应数据库即可
-2、点击pycharm-tools运行manage.py
-3、在下方命令行输入makemigrations和makemigrate
-4、配置Django server：右上方 edit configrations 配置django server
-配置好之后点击三角运行即可
-运行之后在浏览器地址后加入login转到登录界面。
+
+# 学生信息管理系统(Django)
+
+1.此项目为Django初学练手之用，实现了登录、注册以及通过邮箱找回密码的功能
+
+2.能够完成对学生信息的增删改查以及信息的导入导出功能
+
+3.采用python语言Django框架+Ajax+Mysql实现
+
+
+运行步骤：
+
+1、将StudentManagment中的setting.py中的DataBase改成自己相应的配置
+2、点击pycharm-tools的manage.py
+3、在下方命令行输入makemigrations和makemigrate迁移生成数据表
+4、配置django server右上方edit configuration完成配置
+5、配置后保存点击绿色三角运行即可
+运行后在浏览器地址加login即可转入登陆界面
+
